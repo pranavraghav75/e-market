@@ -24,9 +24,9 @@ app.get('/', (_req: Request, res: Response) => {
 app.get('/test-user', async (_req: Request, res: Response) => {
   const User = (await import('./models/User')).default;
   const u = await User.create({
-    name: 'Pranav',
-    email: 'test@gmail.com',
-    password: 'test',
+    name: 'Raghavan',
+    email: 'test1@gmail.com',
+    password: 'password',
     campus: 'UMD'
   });
   res.json(u);
@@ -54,6 +54,35 @@ app.get('/test-listing', async (_req: Request, res: Response) => {
   });
   res.json(l);
 });
+
+app.get('/test-message', (async (_req, res) => {
+  const User = (await import('./models/User')).default;
+  const Listing = (await import('./models/Listing')).default;
+  const Message = (await import('./models/Message')).default;
+
+  // find two users and one listing
+  const users = await User.find().limit(2);
+  if (users.length < 2) {
+    return res.status(400).send('Create at least two users via /test-user first');
+  }
+  const listing = await Listing.findOne();
+  if (!listing) {
+    return res.status(400).send('Create a listing via /test-listing first');
+  }
+
+  // create the chat
+  const chat = await Message.create({
+    chatBetween: [users[0]._id, users[1]._id],
+    listing: listing._id,
+    messages: [
+      { sender: users[0]._id, content: 'Hi, is this still available?' },
+      { sender: users[1]._id, content: 'Yes—it is!' }
+    ]
+  });
+
+  res.json(chat);
+}) as RequestHandler);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
