@@ -19,6 +19,16 @@ app.use(express.json());
 
 app.get('/', (_req, res) => {
   res.send('API is running 🚀');
+  app.get('/test-user', async (_req, res) => {
+    const User = (await import('./models/User')).default;
+    const u = await User.create({
+      name: 'Pranav',
+      email: 'test@gmail.com',
+      password: 'test',
+      campus: 'UMD'
+    });
+    res.json(u);
+  });
 });
 
 const PORT = process.env.PORT || 5000;
