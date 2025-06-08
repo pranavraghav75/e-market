@@ -1,2 +1,2 @@
 .env
-src/scripts/generateTokens.ts
+generateTokens.ts
