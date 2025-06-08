@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import messageRoutes from './routes/messageRoutes';
+import listingRoutes from './routes/listingRoutes';
+
 
 dotenv.config();
 const app = express();
@@ -17,7 +19,9 @@ mongoose.connect(process.env.MONGO_URI!, {
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/api/messages', messageRoutes);
+app.use('/api/listings', listingRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('API is running 🚀');
@@ -26,8 +30,8 @@ app.get('/', (_req: Request, res: Response) => {
 app.get('/test-user', async (_req: Request, res: Response) => {
   const User = (await import('./models/User')).default;
   const u = await User.create({
-    name: 'Guhan',
-    email: 'test2@gmail.com',
+    name: 'hi',
+    email: 'hello@gmail.com',
     password: 'password',
     campus: 'UMD'
   });

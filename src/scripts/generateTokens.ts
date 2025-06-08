@@ -14,7 +14,7 @@ const generateToken = (userId: string) => {
 };
 
 // Replace 'USER_ID_HERE' with a valid user ID from your database
-const userId = '684510207dd7e3cc726dd2f4';
+const userId = '684515c4c138f51d779381d2';
 const token = generateToken(userId);
 
 console.log('Generated Token:', token);
