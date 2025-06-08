@@ -2,6 +2,7 @@ import express, { Request, Response, RequestHandler } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import messageRoutes from './routes/messageRoutes';
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ mongoose.connect(process.env.MONGO_URI!, {
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/messages', messageRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('API is running 🚀');
@@ -24,8 +26,8 @@ app.get('/', (_req: Request, res: Response) => {
 app.get('/test-user', async (_req: Request, res: Response) => {
   const User = (await import('./models/User')).default;
   const u = await User.create({
-    name: 'Raghavan',
-    email: 'test1@gmail.com',
+    name: 'Guhan',
+    email: 'test2@gmail.com',
     password: 'password',
     campus: 'UMD'
   });
