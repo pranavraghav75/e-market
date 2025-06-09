@@ -9,6 +9,9 @@ export const createListing = async (req: Request, res: Response) => {
     return;
   }
 
+  const images: string[] = (req.files as Express.Multer.File[] || [])
+    .map(f => (f as any).path);
+
   const newListing = await Listing.create({
     seller: (req as any).user._id,
     title,
@@ -17,7 +20,7 @@ export const createListing = async (req: Request, res: Response) => {
     category,
     condition,
     campus,
-    images: []    // will add file-upload later
+    images
   });
 
   res.status(201).json(newListing);
@@ -64,6 +67,11 @@ export const updateListing = async (req: Request, res: Response) => {
   }
 
   Object.assign(listing, req.body);
+
+  if (req.files && (req.files as Express.Multer.File[]).length > 0) {
+    listing.images = (req.files as any[]).map(f => f.path);
+  }
+
   const updated = await listing.save();
   res.json(updated);
 };
@@ -84,3 +92,27 @@ export const deleteListing = async (req: Request, res: Response): Promise<void> 
   await listing.deleteOne();
   res.json({ message: 'Listing removed' });
 };
+
+// search & filter listings
+export const searchListings = async (req: Request, res: Response) => {
+  const { keyword, category, campus, minPrice, maxPrice, condition } = req.query;
+  const filters: any = {};
+
+  if (keyword)   filters.$text      = { $search: keyword as string };
+  if (category)  filters.category   = category;
+  if (campus)    filters.campus     = campus;
+  if (condition) filters.condition  = condition;
+
+  if (minPrice || maxPrice) {
+    filters.price = {};
+    if (minPrice) filters.price.$gte = Number(minPrice);
+    if (maxPrice) filters.price.$lte = Number(maxPrice);
+  }
+
+  const results = await Listing.find(filters)
+    .populate('seller', 'name campus')
+    .sort({ createdAt: -1 });
+
+  res.json(results);
+};
+

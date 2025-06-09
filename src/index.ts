@@ -11,9 +11,8 @@ const app = express();
 mongoose.connect(process.env.MONGO_URI!, {
   // you can add options here if needed
 })
-.then(() => console.log('✅ MongoDB connected'))
 .catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+  console.error('MongoDB connection error:', err);
   process.exit(1);
 });
 
@@ -24,7 +23,7 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/listings', listingRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
-  res.send('API is running 🚀');
+  res.send('API is running');
 });
 
 app.get('/test-user', async (_req: Request, res: Response) => {

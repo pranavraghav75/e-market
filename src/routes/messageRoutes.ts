@@ -9,6 +9,7 @@ import { protect } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
+// protected by JWT auth
 router.get('/', protect, getChatsForUser);
 router.get('/:chatId', protect, (req, res, next) => {
   getChatById(req, res).catch(next);
