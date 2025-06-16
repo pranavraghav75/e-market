@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: campus_marketplace
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build:
+      context: ./campus-backend
+      dockerfile: Dockerfile
+    container_name: campus_backend
+    restart: unless-stopped
+    env_file: ./campus-backend/.env
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./campus-frontend
+      dockerfile: Dockerfile
+    container_name: campus_frontend
+    restart: unless-stopped
+    env_file: ./campus-frontend/.env
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

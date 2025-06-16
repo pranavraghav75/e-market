@@ -1,0 +1,12 @@
+# backend artifacts
+campus-backend/node_modules
+campus-backend/dist
+
+# frontend artifacts
+campus-frontend/node_modules
+campus-frontend/dist
+
+# local data / caches
+*.log
+.git
+.DS_Store
