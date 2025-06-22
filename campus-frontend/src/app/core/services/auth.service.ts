@@ -9,13 +9,13 @@ interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:5001/api/auth';
+  private apiUrl = 'http://localhost:5001/api';
 
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string) {
     return this.http
-      .post<User>(`${this.apiUrl}/login`, { email, password })
+      .post<User>(`${this.apiUrl}/auth/login`, { email, password })
       .pipe(
         tap(user => localStorage.setItem('currentUser', JSON.stringify(user)))
       );
@@ -28,7 +28,7 @@ export class AuthService {
     campus: string
   ) {
     return this.http
-      .post<User>(`${this.apiUrl}/register`, {
+      .post<User>(`${this.apiUrl}/auth/register`, {
         name,
         email,
         password,
